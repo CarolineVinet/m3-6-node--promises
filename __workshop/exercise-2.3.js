@@ -1,7 +1,21 @@
 // Exercise 2.3 - Use the error
 // ----------------------------
+const request = require("request-promise");
 
-// require the 'request-promise' module.
-const request = require('request-promise');
+const greeting = (langCode) => {
+  return request(`https://journeyedu.herokuapp.com/hello/${langCode}`)
+    .then((response) => {
+      const data = JSON.parse(response);
+      return data;
+    })
+    .then((parsedResponse) => {
+      return parsedResponse.data;
+    })
 
-// get the code you wrote in 2.2 and paste it here...
+    .catch((err) => {
+      return err.error ? JSON.parse(err.error) : err;
+    });
+};
+
+// Testing
+greeting("jp").then((result) => console.log(result)); // { lang: "French", code: "FR", text: "Bonjour" }
